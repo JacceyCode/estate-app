@@ -50,9 +50,13 @@ export const login = async (req, res) => {
 
     const tokenAge = 1000 * 60 * 60 * 24 * 7;
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: tokenAge,
-    });
+    const token = jwt.sign(
+      { id: user.id, isAdmin: true },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: tokenAge,
+      }
+    );
 
     // NOTE: Setting cookie in header if cookie parser is not installed...
     // res
@@ -78,5 +82,8 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie("token").status(200).json({ message: "Logout Successful." });
+  return res
+    .clearCookie("token")
+    .status(200)
+    .json({ message: "Logout Successful." });
 };

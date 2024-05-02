@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import postRoute from "./routes/postRoute.js";
 import authRoute from "./routes/authRoute.js";
+import testRoute from "./routes/testRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 const app = express();
 
@@ -17,6 +19,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/test", testRoute);
+app.use("/api/user", userRoute);
 
 app.listen(8800, () => {
   console.log("Server is running...");

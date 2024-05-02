@@ -1,17 +1,18 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Layout from "./components/layout/Layout";
+import { Layout, RequireAuth } from "./components/layout/Layout";
 import HomePage from "./pages/homePage/HomePage";
 import ListPage from "./pages/listPage/ListPage";
 import SinglePage from "./pages/singlePage/SinglePage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import ProfileUpdatePage from "./pages/profileUpdate/ProfileUpdatePage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    errorElement: <div>Error</div>,
+    errorElement: <div>Error loading page...</div>,
     children: [
       {
         path: "/",
@@ -34,9 +35,19 @@ const router = createBrowserRouter([
         path: "/:id",
         element: <SinglePage />,
       },
+    ],
+  },
+  {
+    path: "/",
+    element: <RequireAuth />,
+    children: [
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/profile/update",
+        element: <ProfileUpdatePage />,
       },
     ],
   },
