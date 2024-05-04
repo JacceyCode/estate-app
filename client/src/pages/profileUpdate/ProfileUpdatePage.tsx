@@ -1,13 +1,15 @@
 import { FormEvent, useState } from "react";
-import { useAuthContext } from "../../context/AuthContext";
-import "./profileUpdatePage.scss";
-import { isAxiosError } from "axios";
-import apiRequest from "../../data/apiRequest";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext";
+import { isAxiosError } from "axios";
+import "./profileUpdatePage.scss";
+import apiRequest from "../../data/apiRequest";
+import UploadWidget from "../../components/uploadWidget/UploadWidget";
 
 const ProfileUpdatePage = () => {
-  const [error, setError] = useState("");
   const { currentUser, updateUser } = useAuthContext();
+  const [error, setError] = useState("");
+  const [avatar, setAvatar] = useState(currentUser?.avatar);
 
   const navigate = useNavigate();
 
@@ -24,6 +26,7 @@ const ProfileUpdatePage = () => {
         username,
         email,
         password,
+        avatar,
       });
 
       updateUser(res.data);
@@ -67,20 +70,20 @@ const ProfileUpdatePage = () => {
       </section>
       <section className="sideContainer">
         <img
-          src={currentUser!.avatar || "/noavatar.jpg"}
+          src={avatar || "/noavatar.jpg"}
           alt={currentUser?.username}
           className="avatar"
         />
-        {/* <UploadWidget
+        <UploadWidget
           uwConfig={{
-            cloudName: "lamadev",
+            cloudName: "jacceycode",
             uploadPreset: "estate",
             multiple: false,
             maxImageFileSize: 2000000,
             folder: "avatars",
           }}
-          setState={setAvatar}
-        /> */}
+          setPublicId={setAvatar}
+        />
       </section>
     </section>
   );
