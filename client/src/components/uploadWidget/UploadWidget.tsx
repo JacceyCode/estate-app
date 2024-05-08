@@ -11,7 +11,8 @@ interface CloudinaryWidgetConfig {
 
 interface UploadWidgetProps {
   uwConfig: CloudinaryWidgetConfig;
-  setPublicId: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+  setPublicId?: React.Dispatch<React.SetStateAction<string | null | undefined>>;
+  setState: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 interface CloudinaryScriptContextType {
@@ -23,7 +24,7 @@ const CloudinaryScriptContext = createContext<CloudinaryScriptContextType>(
   {} as CloudinaryScriptContextType
 );
 
-function UploadWidget({ uwConfig, setPublicId }: UploadWidgetProps) {
+function UploadWidget({ uwConfig, setPublicId, setState }: UploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -52,7 +53,8 @@ function UploadWidget({ uwConfig, setPublicId }: UploadWidgetProps) {
         (error: Error, result: any) => {
           if (!error && result && result.event === "success") {
             // console.log("Done! Here is the image info: ", result.info);
-            setPublicId(result.info.secure_url);
+            setPublicId?.(result.info.secure_url);
+            setState?.((prev: any) => [...prev, result.info.secure_url]);
           }
         }
       );

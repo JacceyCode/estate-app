@@ -1,41 +1,90 @@
-type Data = {
-  id: number;
+export type Data = {
+  id: string;
   title: string;
   images: string[];
-  bedroom?: number;
+  bedroom: number;
   bathroom: number;
   price: number;
   address: string;
-  latitude: number;
-  longitude: number;
+  latitude: string;
+  longitude: string;
+};
+
+type User = {
+  avatar: string;
+  username: string;
+};
+
+type PostDetail = {
+  bus: number;
+  desc: string;
+  id: string;
+  income: string;
+  pet: string;
+  postId: string;
+  restaurant: number;
+  school: number;
+  size: number;
+  utilities: string;
 };
 
 export type SingleData = {
-  id: number;
+  address: string;
+  bathroom: number;
+  bedroom: number;
+  city: string;
+  id: string;
+  images: string[];
+  latitude: string;
+  longitude: string;
+  postDetail: PostDetail;
+  price: number;
+  property: string;
+  title: string;
+  type: string;
+  user: User;
+  userId: string;
+  isSaved: boolean;
+};
+
+export type ListDataProp = {
+  postResponse: {
+    data: Data[];
+  };
+};
+
+export type UserPostProp = {
+  id: string;
   title: string;
   price: number;
   images: string[];
-  bedRooms?: number;
-  bathroom: number;
-  size: number;
-  latitude: number;
-  longitude: number;
-  city: string;
   address: string;
-  school: string;
-  bus: string;
-  restaurant: string;
-  description: string;
+  city: string;
+  bedroom: number;
+  bathroom: number;
+  latitude: string;
+  longitude: string;
+  type: string;
+  property: string;
+  createdAT: Date;
+  userId: string;
 };
 
-export type ListDataProp = Data[];
+export type ProfileDataProp = {
+  postResponse: {
+    data: {
+      userPosts: UserPostProp[];
+      savedPosts: UserPostProp[];
+    };
+  };
+};
 
 export interface CardProp {
   item: Data;
 }
 
 export interface MapProp {
-  items: ListDataProp | SingleData[];
+  items: SingleData[];
 }
 
 export type UserData = {

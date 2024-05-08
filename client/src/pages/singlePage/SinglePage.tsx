@@ -1,35 +1,61 @@
+import { useState } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
-import { singlePostData, userData } from "../../data/dummydata";
 import Map from "../../components/map/Map";
+import { SingleData } from "../../types/data";
+import DOMPurify from "dompurify";
+import { useAuthContext } from "../../context/AuthContext";
+import apiRequest from "../../data/apiRequest";
 
 const SinglePage = () => {
+  const post = useLoaderData() as SingleData;
+  const { currentUser } = useAuthContext();
+  const navigate = useNavigate();
+  const [saved, setSaved] = useState(post.isSaved);
+
+  const handleSave = async () => {
+    if (!currentUser) navigate("/login");
+
+    try {
+      await apiRequest.post("/user/save", { postId: post.id });
+      setSaved((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <section className="singlePage">
       <section className="details">
         <section className="wrapper">
-          <Slider images={singlePostData.images} />
+          <Slider images={post?.images} />
 
           <article className="info">
             <section className="top">
               <section className="post">
-                <h1>{singlePostData.title}</h1>
+                <h1>{post?.title}</h1>
 
                 <div className="address">
                   <img src="/pin.png" alt="Location icon" />
-                  <span>{singlePostData.address}</span>
+                  <span>{post?.address}</span>
                 </div>
 
-                <div className="price">$ {singlePostData.price}</div>
+                <div className="price">$ {post?.price}</div>
               </section>
 
               <section className="user">
-                <img src={userData.img} alt={userData.name} />
-                <span>{userData.name}</span>
+                <img src={post.user?.avatar} alt={post.user.username} />
+                <span>{post.user?.username}</span>
               </section>
             </section>
 
-            <section className="bottom">{singlePostData.description}</section>
+            <section
+              className="bottom"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.postDetail?.desc),
+              }}
+            ></section>
           </article>
         </section>
       </section>
@@ -42,21 +68,25 @@ const SinglePage = () => {
               <img src="/utility.png" alt="utility icon" />
               <div className="featureText">
                 <span>Utilities</span>
-                <p>Renter is responsible</p>
+                {post.postDetail?.utilities === "owner" ? (
+                  <p>Owner is responsible</p>
+                ) : (
+                  <p>Tenant is responsible</p>
+                )}
               </div>
             </div>
             <div className="feature">
               <img src="/pet.png" alt="pet icon" />
               <div className="featureText">
                 <span>Pet Policy</span>
-                <p>Pets Allowed</p>
+                {post.postDetail?.pet && <p>{`Pets ${post.postDetail.pet}`}</p>}
               </div>
             </div>
             <div className="feature">
               <img src="/fee.png" alt="cash icon" />
               <div className="featureText">
-                <span>Property Fees</span>
-                <p>Must have 3x the rent in total household income</p>
+                <span>Income policy</span>
+                <p>{post.postDetail?.income}</p>
               </div>
             </div>
           </div>
@@ -65,15 +95,15 @@ const SinglePage = () => {
           <div className="sizes">
             <div className="size">
               <img src="/size.png" alt="icon" />
-              <span>80 sqft</span>
+              <span>{post.postDetail?.size} sqft</span>
             </div>
             <div className="size">
               <img src="/bed.png" alt="icon" />
-              <span>2 beds</span>
+              <span>{post?.bedroom} bed(s)</span>
             </div>
             <div className="size">
               <img src="/bath.png" alt="icon" />
-              <span>1 bathroom</span>
+              <span>{post?.bathroom} bathroom(s)</span>
             </div>
           </div>
 
@@ -83,28 +113,28 @@ const SinglePage = () => {
               <img src="/school.png" alt="school icon" />
               <div className="featureText">
                 <span>School</span>
-                <p>250m away</p>
+                <p>{post.postDetail?.school}m away</p>
               </div>
             </div>
             <div className="feature">
               <img src="/pet.png" alt="pet icon" />
               <div className="featureText">
                 <span>Bus Stop</span>
-                <p>100m away</p>
+                <p>{post.postDetail?.bus}m away</p>
               </div>
             </div>
             <div className="feature">
               <img src="/fee.png" alt="cash icon" />
               <div className="featureText">
                 <span>Restaurant</span>
-                <p>200m away</p>
+                <p>{post.postDetail?.restaurant}m away</p>
               </div>
             </div>
           </div>
 
           <p className="title">Location</p>
           <div className="mapContainer">
-            <Map items={[singlePostData]} />
+            <Map items={[post]} />
           </div>
 
           <div className="buttons">
@@ -112,9 +142,14 @@ const SinglePage = () => {
               <img src="/chat.png" alt="Message icon" />
               Send a Message
             </button>
-            <button>
+            <button
+              onClick={handleSave}
+              style={{
+                backgroundColor: saved ? "#fece51" : "white",
+              }}
+            >
               <img src="/save.png" alt="Bookmark icon" />
-              Save the Place
+              {saved ? "Place saved!" : "Save the Place"}
             </button>
           </div>
         </div>

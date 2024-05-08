@@ -1,6 +1,6 @@
-import { ListDataProp, SingleData, UserData } from "../types/data";
+import { UserData } from "../types/data";
 
-export const listData: ListDataProp = [
+export const listData = [
   {
     id: 1,
     title: "A Great Apartment Next to the Beach!",
@@ -107,8 +107,8 @@ export const listData: ListDataProp = [
   },
 ];
 
-export const singlePostData: SingleData = {
-  id: 1,
+export const singlePostData = {
+  id: "1",
   title: "Beautiful Apartment",
   price: 1200,
   images: [
@@ -117,11 +117,11 @@ export const singlePostData: SingleData = {
     "https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     "https://images.pexels.com/photos/2467285/pexels-photo-2467285.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
   ],
-  bedRooms: 2,
+  bedroom: 2,
   bathroom: 1,
   size: 861,
-  latitude: 51.5074,
-  longitude: -0.1278,
+  latitude: "51.5074",
+  longitude: "-0.1278",
   city: "London",
   address: "1234 Broadway St",
   school: "250m away",

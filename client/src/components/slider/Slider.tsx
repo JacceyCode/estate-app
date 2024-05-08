@@ -34,9 +34,11 @@ const Slider = ({ images }: SLiderProp) => {
               onClick={() => changeSlide("left")}
             />
           </div>
+
           <div className="imgContainer">
             <img src={images[imageIndex]} alt="Apartment image" />
           </div>
+
           <div className="arrow">
             <img
               src="/arrow.png"

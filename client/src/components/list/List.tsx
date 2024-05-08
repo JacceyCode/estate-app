@@ -1,11 +1,11 @@
 import "./list.scss";
-import { listData } from "../../data/dummydata";
 import Card from "../card/Card";
+import { UserPostProp } from "../../types/data";
 
-const List = () => {
+const List = ({ posts }: { posts: UserPostProp[] }) => {
   return (
     <section className="list">
-      {listData.map((item) => (
+      {posts.map((item) => (
         <Card item={item} key={item.id} />
       ))}
     </section>
