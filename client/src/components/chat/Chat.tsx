@@ -1,14 +1,22 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import "./chat.scss";
 import { ChatMessage, ChatProp, ReceiverProp } from "../../types/data";
 import { useAuthContext } from "../../context/AuthContext";
 import apiRequest from "../../data/apiRequest";
 import { format } from "timeago.js";
+import { useSocketContext } from "../../context/SocketContext";
 
 const Chat = ({ chats }: { chats: ChatProp[] }) => {
   const [chat, setChat] = useState<ChatMessage>();
   const [openChat, setOpenChat] = useState(false);
   const { currentUser } = useAuthContext();
+  const { socket } = useSocketContext();
+
+  const messageEndRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
 
   const handleOpenChat = async (id: string, receiver: ReceiverProp) => {
     try {
@@ -42,10 +50,48 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
       });
 
       e.target.reset();
+
+      // sending chats using socket.io
+      socket?.emit("sendMessage", {
+        receiverId: chat?.receiver.id,
+        data: res.data,
+      });
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const read = async () => {
+      try {
+        await apiRequest.put("/chats/read/" + chat?.id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (chat && socket) {
+      socket.on("getMessage", (data) => {
+        if (chat.id === data.chatId) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setChat((prev: ChatMessage | any) => {
+            if (prev) {
+              return {
+                ...prev,
+                messages: [...prev.messages, data],
+              };
+            }
+          });
+
+          read();
+        }
+      });
+    }
+
+    return () => {
+      socket?.off("getMessage");
+    };
+  }, [socket, chat]);
 
   return (
     <section className="chat">
@@ -105,6 +151,7 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
                 <span>{format(message.createdAT)}</span>
               </section>
             ))}
+            <section ref={messageEndRef}></section>
           </section>
 
           <form onSubmit={handleSubmit} className="bottom">
