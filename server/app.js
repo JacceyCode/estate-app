@@ -6,6 +6,8 @@ import postRoute from "./routes/postRoute.js";
 import authRoute from "./routes/authRoute.js";
 import testRoute from "./routes/testRoute.js";
 import userRoute from "./routes/userRoute.js";
+import chatRoute from "./routes/chatRoute.js";
+import messageRoute from "./routes/messageRoute.js";
 
 const app = express();
 dotenv.config();
@@ -22,6 +24,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/chats", chatRoute);
+app.use("/api/messages", messageRoute);
 app.use("/api/test", testRoute);
 
 app.listen(8800, () => {

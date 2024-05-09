@@ -70,12 +70,48 @@ export type UserPostProp = {
   userId: string;
 };
 
+export type ReceiverProp = {
+  id: string;
+  username: string;
+  avatar: string | null;
+};
+
+export type ChatProp = {
+  id: string;
+  userIDs: string[];
+  createdAT: Date;
+  seenBy: string[];
+  lastMessage: string;
+  receiver: ReceiverProp;
+};
+
+type Message = {
+  id: string;
+  text: string;
+  userId: string;
+  chatId: string;
+  createdAT: Date;
+};
+
+export type ChatMessage = {
+  id: string;
+  userIDs: string[];
+  createdAT: Date;
+  seenBy: string[];
+  lastMessage: string;
+  messages: Message[];
+  receiver: ReceiverProp;
+};
+
 export type ProfileDataProp = {
   postResponse: {
     data: {
       userPosts: UserPostProp[];
       savedPosts: UserPostProp[];
     };
+  };
+  chatResponse: {
+    data: ChatProp[];
   };
 };
 
