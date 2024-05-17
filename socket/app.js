@@ -40,4 +40,8 @@ io.on("connection", (socket) => {
   });
 });
 
-io.listen(4000);
+const PORT = process.env.PORT || 4000; // Use the environment PORT variable or default to 4000
+
+io.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
