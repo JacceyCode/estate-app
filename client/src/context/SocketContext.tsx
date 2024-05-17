@@ -25,8 +25,9 @@ export const SocketContextProvider = ({
   const { currentUser } = useAuthContext();
 
   useEffect(() => {
-    const socketInstance = io("https://seron-estate-chat-server.onrender.com");
     // setSocket(io("http://localhost:4000"));
+
+    const socketInstance = io("https://seron-estate-chat-server.onrender.com");
 
     setSocket(socketInstance);
 
