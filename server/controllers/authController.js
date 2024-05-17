@@ -71,7 +71,7 @@ export const login = async (req, res) => {
       expiresIn: tokenAge,
       httpOnly: true,
       // sameSite: "None",
-      path: "/",
+      // path: "/",
     };
 
     if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
