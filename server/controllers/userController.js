@@ -119,8 +119,6 @@ export const profilePosts = async (req, res) => {
   try {
     const userId = req.userId || null;
 
-    console.log(userId);
-
     const userPosts = await prisma.post.findMany({
       where: { userId },
     });

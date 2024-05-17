@@ -2,7 +2,8 @@ import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
-    origin: "https://seron-estate-app.vercel.app",
+    origin: ["http://localhost:5173", "https://seron-estate-app.vercel.app"],
+    credentials: true,
   },
 });
 
