@@ -67,12 +67,11 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
-    console.log("authcontroller", token);
-
     res
       .cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", //set in production mode
+        // sameSite: "None",
         maxAge: tokenAge,
       })
       .status(200)
