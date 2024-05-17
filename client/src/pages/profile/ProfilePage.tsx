@@ -11,6 +11,8 @@ const ProfilePage = () => {
   const data = useLoaderData() as ProfileDataProp;
   const { currentUser, updateUser } = useAuthContext();
 
+  console.log(data);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
