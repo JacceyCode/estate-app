@@ -14,8 +14,8 @@ const app = express();
 
 app.use(
   cors({
-    // origin: [process.env.CLIENT_URL, "http://localhost:5173"],
-    origin: ["http://localhost:5173", "https://seron-estate-app.vercel.app"],
+    origin: [process.env.CLIENT_URL, "http://localhost:5173"],
+    // origin: ["http://localhost:5173", "https://seron-estate-app.vercel.app"],
     credentials: true,
   })
 );
