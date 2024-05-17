@@ -48,6 +48,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RequireAuth />,
+    errorElement: <div>Error loading profile page...</div>,
     children: [
       {
         path: "/profile",

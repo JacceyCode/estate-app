@@ -5,14 +5,17 @@ import { useAuthContext } from "../../context/AuthContext";
 import apiRequest from "../../data/apiRequest";
 import { format } from "timeago.js";
 import { useSocketContext } from "../../context/SocketContext";
+import { useNotificationStore } from "../../context/notificationStore";
 
 const Chat = ({ chats }: { chats: ChatProp[] }) => {
   const [chat, setChat] = useState<ChatMessage>();
   const [openChat, setOpenChat] = useState(false);
   const { currentUser } = useAuthContext();
   const { socket } = useSocketContext();
+  const reversedChats = chats.slice().reverse();
 
   const messageEndRef = useRef<HTMLElement>(null);
+  const decreaseCount = useNotificationStore((state) => state.decreaseCount);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,6 +24,9 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
   const handleOpenChat = async (id: string, receiver: ReceiverProp) => {
     try {
       const res = await apiRequest("/chats/" + id);
+      if (!res.data.seenBy.includes(currentUser?.id)) {
+        decreaseCount();
+      }
       setChat({ ...res.data, receiver });
       setOpenChat(true);
     } catch (error) {
@@ -97,7 +103,7 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
     <section className="chat">
       <section className="messages">
         <h1>Messages</h1>
-        {chats.map((chat) => (
+        {reversedChats.map((chat) => (
           <section
             className="message"
             key={chat.id}
@@ -134,7 +140,7 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
           </section>
 
           <section className="center">
-            {chat.messages.map((message) => (
+            {chat?.messages.map((message) => (
               <section
                 className="chatMessage"
                 style={{

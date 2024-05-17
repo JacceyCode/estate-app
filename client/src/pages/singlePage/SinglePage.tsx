@@ -7,12 +7,21 @@ import { SingleData } from "../../types/data";
 import DOMPurify from "dompurify";
 import { useAuthContext } from "../../context/AuthContext";
 import apiRequest from "../../data/apiRequest";
+import ChatBox from "../../components/chatBox/ChatBox";
 
 const SinglePage = () => {
   const post = useLoaderData() as SingleData;
   const { currentUser } = useAuthContext();
   const navigate = useNavigate();
   const [saved, setSaved] = useState(post.isSaved);
+  const postOwneer = currentUser?.id === post.userId;
+
+  ////// for the chat features /////////////
+
+  const [openChat, setOpenChat] = useState(false);
+  const closeChat = () => setOpenChat(false);
+
+  ////// for the chat features /////////////
 
   const handleSave = async () => {
     if (!currentUser) navigate("/login");
@@ -137,21 +146,31 @@ const SinglePage = () => {
             <Map items={[post]} />
           </div>
 
-          <div className="buttons">
-            <button>
-              <img src="/chat.png" alt="Message icon" />
-              Send a Message
-            </button>
-            <button
-              onClick={handleSave}
-              style={{
-                backgroundColor: saved ? "#fece51" : "white",
-              }}
-            >
-              <img src="/save.png" alt="Bookmark icon" />
-              {saved ? "Place saved!" : "Save the Place"}
-            </button>
-          </div>
+          {!postOwneer && (
+            <div className="buttons">
+              <button onClick={() => setOpenChat(true)}>
+                <img src="/chat.png" alt="Message icon" />
+                Send a Message
+              </button>
+              <button
+                onClick={handleSave}
+                style={{
+                  backgroundColor: saved ? "#fece51" : "white",
+                }}
+              >
+                <img src="/save.png" alt="Bookmark icon" />
+                {saved ? "Place saved!" : "Save the Place"}
+              </button>
+            </div>
+          )}
+
+          {openChat && (
+            <ChatBox
+              receiver={post.user}
+              receiverId={post.userId}
+              handleCloseChat={closeChat}
+            />
+          )}
         </div>
       </section>
     </section>

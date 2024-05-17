@@ -87,8 +87,8 @@ export const savePost = async (req, res) => {
     const savedPost = await prisma.savedPost.findUnique({
       where: {
         userId_postId: {
-          userId,
-          postId,
+          userId: userId,
+          postId: postId,
         },
       },
     });
@@ -103,8 +103,8 @@ export const savePost = async (req, res) => {
     } else {
       await prisma.savedPost.create({
         data: {
-          userId,
-          postId,
+          userId: userId,
+          postId: postId,
         },
       });
       res.status(200).json({ message: "Post saved!" });
@@ -117,7 +117,7 @@ export const savePost = async (req, res) => {
 
 export const profilePosts = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId || null;
 
     const userPosts = await prisma.post.findMany({
       where: { userId },
@@ -131,10 +131,33 @@ export const profilePosts = async (req, res) => {
     });
 
     const savedPosts = saved.map((item) => item.post);
-
     res.status(200).json({ userPosts, savedPosts });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Failed to get profile posts!" });
+  }
+};
+
+export const getNotificationNumber = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const chatsNumber = await prisma.chat.count({
+      where: {
+        userIDs: {
+          hasSome: [userId],
+        },
+        NOT: {
+          seenBy: {
+            hasSome: [userId],
+          },
+        },
+      },
+    });
+
+    res.status(200).json(chatsNumber);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to get notification counts!" });
   }
 };

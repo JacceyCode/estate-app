@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./navbar.scss";
 import { useAuthContext } from "../../context/AuthContext";
+import { useNotificationStore } from "../../context/notificationStore";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const { currentUser } = useAuthContext();
+
+  const fetchCount = useNotificationStore((state) => state.fetchCount);
+  const notificationCount = useNotificationStore((state) => state.count);
+
+  useEffect(() => {
+    if (currentUser) fetchCount();
+  }, [currentUser, fetchCount, notificationCount]);
 
   return (
     <nav>
@@ -17,9 +25,9 @@ const Navbar = () => {
         </Link>
 
         <Link to="/">Home</Link>
-        <Link to="/">About</Link>
-        <Link to="/">Contact</Link>
-        <Link to="/">Agents</Link>
+        {/* <Link to="/">About</Link> */}
+        {/* <Link to="/list">Contact</Link> */}
+        <Link to="/list">Rentals</Link>
       </section>
 
       <section className="right">
@@ -31,7 +39,9 @@ const Navbar = () => {
             />
             <span>{currentUser.username}</span>
             <Link to="/profile">
-              <div className="notification">3</div>
+              {notificationCount > 0 && (
+                <div className="notification">{notificationCount}</div>
+              )}
               <span>Profile</span>
             </Link>
           </section>
@@ -53,9 +63,9 @@ const Navbar = () => {
         </div>
         <section className={open ? "menu active" : "menu"}>
           <Link to="/">Home</Link>
-          <Link to="/">About</Link>
-          <Link to="/">Contact</Link>
-          <Link to="/">Agents</Link>
+          {/* <Link to="/">About</Link> */}
+          {/* <Link to="/list">Contact</Link> */}
+          <Link to="/list">Rentals</Link>
           <Link to="/login">Sign in</Link>
           <Link to="/register">Sign up</Link>
         </section>
