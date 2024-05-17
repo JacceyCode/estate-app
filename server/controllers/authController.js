@@ -70,6 +70,7 @@ export const login = async (req, res) => {
     const cookieOptions = {
       expiresIn: tokenAge,
       httpOnly: true,
+      sameSite: "None",
       path: "/",
     };
 
