@@ -70,7 +70,8 @@ export const login = async (req, res) => {
     const cookieOptions = {
       expiresIn: tokenAge,
       httpOnly: true,
-      // sameSite: "None",
+      sameSite: "None",
+      path: "/",
     };
 
     if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
