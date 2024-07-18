@@ -83,6 +83,7 @@ export type ChatProp = {
   seenBy: string[];
   lastMessage: string;
   receiver: ReceiverProp;
+  sender: ReceiverProp;
 };
 
 type Message = {

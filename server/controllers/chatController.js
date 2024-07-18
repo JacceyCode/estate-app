@@ -12,11 +12,25 @@ export const getChats = async (req, res) => {
     });
 
     for (const chat of chats) {
-      const receiverId = chat.userIDs.find((id) => id !== userId);
+      // const receiverId = chat.userIDs.find((id) => id !== userId);
+      const receiverId = chat.userIDs[1];
+      const senderId = chat.userIDs[0];
 
-      const receiver = await prisma.user.findUnique({
+      // const receiver = await prisma.user.findUnique({
+      //   where: {
+      //     id: [receiverId, userId],
+      //   },
+      //   select: {
+      //     id: true,
+      //     username: true,
+      //     avatar: true,
+      //   },
+      // });
+      const profile = await prisma.user.findMany({
         where: {
-          id: receiverId,
+          id: {
+            in: [receiverId, senderId],
+          },
         },
         select: {
           id: true,
@@ -25,7 +39,8 @@ export const getChats = async (req, res) => {
         },
       });
 
-      chat.receiver = receiver;
+      chat.receiver = profile[0];
+      chat.sender = profile[1];
     }
 
     res.status(200).json(chats);

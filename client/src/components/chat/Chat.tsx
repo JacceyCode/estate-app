@@ -115,7 +115,11 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
             onClick={() => handleOpenChat(chat.id, chat.receiver)}
           >
             <img
-              src={chat.receiver.avatar || "/noavatar.jpg"}
+              src={
+                currentUser?.id === chat.receiver.id
+                  ? chat.sender.avatar || "/noavatar.jpg"
+                  : chat.receiver.avatar || "/noavatar.jpg"
+              }
               alt={chat.receiver.username}
             />
             <span>{chat.receiver.username}</span>
@@ -132,7 +136,9 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
                 src={chat.receiver.avatar || "noavatar.jpg"}
                 alt={chat.receiver.username}
               />
-              {chat.receiver.username}
+              {currentUser?.id === chat.receiver.id
+                ? chat.userIDs.find((id) => id !== chat.receiver.id)
+                : chat.receiver.username}
             </section>
             <span className="close" onClick={() => setOpenChat(false)}>
               X

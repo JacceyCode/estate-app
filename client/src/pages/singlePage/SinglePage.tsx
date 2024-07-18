@@ -14,7 +14,7 @@ const SinglePage = () => {
   const { currentUser } = useAuthContext();
   const navigate = useNavigate();
   const [saved, setSaved] = useState(post.isSaved);
-  const postOwneer = currentUser?.id === post.userId;
+  const postOwner = currentUser?.id === post.userId;
 
   ////// for the chat features /////////////
 
@@ -146,7 +146,7 @@ const SinglePage = () => {
             <Map items={[post]} />
           </div>
 
-          {!postOwneer && (
+          {!postOwner && (
             <div className="buttons">
               <button onClick={() => setOpenChat(true)}>
                 <img src="/chat.png" alt="Message icon" />
@@ -155,7 +155,7 @@ const SinglePage = () => {
               <button
                 onClick={handleSave}
                 style={{
-                  backgroundColor: saved ? "#fece51" : "white",
+                  backgroundColor: currentUser && saved ? "#fece51" : "white",
                 }}
               >
                 <img src="/save.png" alt="Bookmark icon" />
