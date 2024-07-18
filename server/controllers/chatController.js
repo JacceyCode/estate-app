@@ -80,34 +80,12 @@ export const addChat = async (req, res) => {
   const userId = req.userId;
   const { receiverId, imageUrl, propertyId } = req.body;
 
-  console.log("Server console//////////////////////////////");
-
-  console.log(imageUrl, propertyId);
-
   // Basic validation
   if (!receiverId || !imageUrl || !propertyId) {
     return res.status(400).json({ message: "All fields are required!" });
   }
 
   try {
-    // const newChat = await prisma.chat.create({
-    //   data: {
-    //     userIDs: [userId, receiverId],
-    //     imageUrl: imageUrl,
-    //     propertyId: propertyId,
-    //   },
-    // });
-    // const newChat = await prisma.chat.create({
-    //   data: {
-    //     users: { connect: [{ id: userId }, { id: receiverId }] },
-    //     imageUrl: imageUrl,
-    //     propertyId: propertyId,
-    //   },
-    // });
-
-    // res.status(200).json(newChat);
-
-    // Step 1: Check for existing chat
     const existingChat = await prisma.chat.findFirst({
       where: {
         propertyId: propertyId,

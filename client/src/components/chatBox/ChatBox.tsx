@@ -32,7 +32,6 @@ const ChatBox = ({
   };
 
   const handleSubmit = async () => {
-    console.log(info);
     setIsLoading(true);
     try {
       const res = await apiRequest.post("/chats", {
