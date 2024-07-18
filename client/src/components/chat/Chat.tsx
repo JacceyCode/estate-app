@@ -119,9 +119,10 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
               className="message"
               key={chat.id}
               style={{
-                backgroundColor: chat.seenBy.includes(currentUser!.id)
-                  ? "white"
-                  : "#fecd514e",
+                // backgroundColor: chat.seenBy.includes(currentUser!.id)
+                //   ? "white"
+                //   : "#fecd514e",
+                backgroundColor: "white",
               }}
               onClick={() =>
                 handleOpenChat(chat.id, chat.receiver, chat.sender)
