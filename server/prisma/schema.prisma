@@ -94,7 +94,7 @@ model Chat {
   messages    Message[]
   lastMessage String?
   imageUrl    String?
-  propertyId  String?
+  propertyId  String?   @db.ObjectId
 }
 
 model Message {
