@@ -157,7 +157,7 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
                 <p>{chat.lastMessage}</p>
               </div>
 
-              <Link to={`/${chat.propertyId}` && "/list"}>
+              <Link to={`/${chat.propertyId}` ?? "/list"}>
                 <img
                   src={chat.imageUrl || "school.png"}
                   alt="property image"
