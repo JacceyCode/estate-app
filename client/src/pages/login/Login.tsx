@@ -48,18 +48,18 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <h1>Welcome back</h1>
           <input
-            name="username (Test - 'James')"
+            name="username"
             required
             minLength={3}
             maxLength={20}
             type="text"
-            placeholder="Username"
+            placeholder="Username (Test - 'James')"
           />
           <input
-            name="password (Test - password)"
+            name="password"
             type="password"
             required
-            placeholder="Password"
+            placeholder="Password (Test - password)"
           />
           <button disabled={isLoading}>Login</button>
           {error && <span>{error}</span>}
