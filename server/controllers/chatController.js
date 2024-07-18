@@ -76,21 +76,69 @@ export const getChat = async (req, res) => {
   }
 };
 
+// export const addChat = async (req, res) => {
+//   const userId = req.userId;
+//   const { receiverId, imageUrl, propertyId } = req.body;
+
+//   // Basic validation
+//   if (!userId || !receiverId || !imageUrl || !propertyId) {
+//     return res.status(400).json({ message: "All fields are required!" });
+//   }
+
+//   // Ensure userId and receiverId are distinct
+//   if (userId === receiverId) {
+//     return res
+//       .status(400)
+//       .json({ message: "User cannot chat with themselves!" });
+//   }
+
+//   try {
+//     const newChat = await prisma.chat.create({
+//       data: {
+//         userIDs: [userId, receiverId],
+//         imageUrl,
+//         propertyId,
+//       },
+//     });
+
+//     res.status(200).json(newChat);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Failed to add chat!" });
+//   }
+// };
+
 export const addChat = async (req, res) => {
   const userId = req.userId;
   const { receiverId, imageUrl, propertyId } = req.body;
+
+  // Basic validation
+  if (!userId || !receiverId || !imageUrl || !propertyId) {
+    return res.status(400).json({ message: "All fields are required!" });
+  }
+
+  // Ensure userId and receiverId are distinct
+  if (userId === receiverId) {
+    return res
+      .status(400)
+      .json({ message: "User cannot chat with themselves!" });
+  }
+
   try {
     const newChat = await prisma.chat.create({
       data: {
-        userIDs: [userId, receiverId],
+        userIDs: [userId, receiverId], // Connect users to the chat
         imageUrl,
         propertyId,
+      },
+      include: {
+        users: true, // Include users in the response
       },
     });
 
     res.status(200).json(newChat);
   } catch (error) {
-    console.log(error);
+    console.error("Error creating chat:", error);
     res.status(500).json({ message: "Failed to add chat!" });
   }
 };
