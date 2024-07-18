@@ -1,8 +1,8 @@
 import prisma from "../lib/prisma.js";
 
 export const addMessage = async (req, res) => {
-  const userId = req.userId;
-  const chatId = req.params.chatId;
+  // const userId = req.userId;
+  const { chatId, senderId: userId } = req.params;
   const text = req.body.text;
 
   try {

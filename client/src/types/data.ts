@@ -102,6 +102,7 @@ export type ChatMessage = {
   lastMessage: string;
   messages: Message[];
   receiver: ReceiverProp;
+  sender: ReceiverProp;
 };
 
 export type ProfileDataProp = {

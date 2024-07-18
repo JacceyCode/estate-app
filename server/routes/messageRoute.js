@@ -4,6 +4,6 @@ import { addMessage } from "../controllers/messageController.js";
 
 const router = express.Router();
 
-router.post("/:chatId", verifyToken, addMessage);
+router.post("/:chatId/:senderId", verifyToken, addMessage);
 
 export default router;

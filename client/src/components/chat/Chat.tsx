@@ -21,13 +21,17 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  const handleOpenChat = async (id: string, receiver: ReceiverProp) => {
+  const handleOpenChat = async (
+    id: string,
+    receiver: ReceiverProp,
+    sender: ReceiverProp
+  ) => {
     try {
       const res = await apiRequest("/chats/" + id);
       if (!res.data.seenBy.includes(currentUser?.id)) {
         decreaseCount();
       }
-      setChat({ ...res.data, receiver });
+      setChat({ ...res.data, receiver, sender });
       setOpenChat(true);
     } catch (error) {
       console.log(error);
@@ -41,7 +45,11 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
     if (!text) return;
 
     try {
-      const res = await apiRequest.post("/messages/" + chat?.id, { text });
+      // const res = await apiRequest.post("/messages/" + chat?.id, { text });
+      const res = await apiRequest.post(
+        `/messages/${chat?.id}/${currentUser?.id}`,
+        { text }
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setChat((prev: ChatMessage | any) => {
@@ -103,29 +111,39 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
     <section className="chat">
       <section className="messages">
         <h1>Messages</h1>
-        {reversedChats.map((chat) => (
-          <section
-            className="message"
-            key={chat.id}
-            style={{
-              backgroundColor: chat.seenBy.includes(currentUser!.id)
-                ? "white"
-                : "#fecd514e",
-            }}
-            onClick={() => handleOpenChat(chat.id, chat.receiver)}
-          >
-            <img
-              src={
-                currentUser?.id === chat.receiver.id
-                  ? chat.sender.avatar || "/noavatar.jpg"
-                  : chat.receiver.avatar || "/noavatar.jpg"
+        {reversedChats.map((chat) => {
+          const currentProfile = currentUser?.id === chat.receiver.id;
+
+          return (
+            <section
+              className="message"
+              key={chat.id}
+              style={{
+                backgroundColor: chat.seenBy.includes(currentUser!.id)
+                  ? "white"
+                  : "#fecd514e",
+              }}
+              onClick={() =>
+                handleOpenChat(chat.id, chat.receiver, chat.sender)
               }
-              alt={chat.receiver.username}
-            />
-            <span>{chat.receiver.username}</span>
-            <p>{chat.lastMessage}</p>
-          </section>
-        ))}
+            >
+              <img
+                src={
+                  currentProfile
+                    ? chat.sender.avatar || "/noavatar.jpg"
+                    : chat.receiver.avatar || "/noavatar.jpg"
+                }
+                alt={
+                  currentProfile ? chat.sender.username : chat.receiver.username
+                }
+              />
+              <span>
+                {currentProfile ? chat.sender.username : chat.receiver.username}
+              </span>
+              <p>{chat.lastMessage}</p>
+            </section>
+          );
+        })}
       </section>
 
       {openChat && chat && (
@@ -133,11 +151,19 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
           <section className="top">
             <section className="user">
               <img
-                src={chat.receiver.avatar || "noavatar.jpg"}
-                alt={chat.receiver.username}
+                src={
+                  currentUser?.id === chat.receiver.id
+                    ? chat.sender.avatar || "noavatar.jpg"
+                    : chat.receiver.avatar || "noavatar.jpg"
+                }
+                alt={
+                  currentUser?.id === chat.receiver.id
+                    ? chat.sender.username
+                    : chat.receiver.username
+                }
               />
               {currentUser?.id === chat.receiver.id
-                ? chat.userIDs.find((id) => id !== chat.receiver.id)
+                ? chat.sender.username
                 : chat.receiver.username}
             </section>
             <span className="close" onClick={() => setOpenChat(false)}>
