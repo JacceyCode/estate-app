@@ -48,7 +48,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <h1>Welcome back</h1>
           <input
-            name="username"
+            name="username (Test - 'James')"
             required
             minLength={3}
             maxLength={20}
@@ -56,14 +56,14 @@ const Login = () => {
             placeholder="Username"
           />
           <input
-            name="password"
+            name="password (Test - password)"
             type="password"
             required
             placeholder="Password"
           />
           <button disabled={isLoading}>Login</button>
           {error && <span>{error}</span>}
-          <Link to="/register">{"Don't"} you have an account?</Link>
+          <Link to="/register">You {"don't"} have an account? Sign up</Link>
         </form>
       </section>
       <div className="imgContainer">
