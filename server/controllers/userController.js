@@ -126,14 +126,9 @@ export const profilePosts = async (req, res) => {
   try {
     const userId = req.userId;
 
-    console.log("From server UserController");
-    console.log("userID", userId);
-
     const userPosts = await prisma.post.findMany({
       where: { userId },
     });
-
-    console.log("userPost", userPosts);
 
     const saved = await prisma.savedPost.findMany({
       where: { userId },
@@ -143,8 +138,6 @@ export const profilePosts = async (req, res) => {
     });
 
     const savedPosts = saved.map((item) => item.post);
-
-    console.log("savedPost", savedPosts);
 
     res.status(200).json({ userPosts, savedPosts });
   } catch (error) {
