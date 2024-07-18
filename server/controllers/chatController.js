@@ -80,8 +80,15 @@ export const addChat = async (req, res) => {
   const userId = req.userId;
   const { receiverId, imageUrl, propertyId } = req.body;
 
+  console.log("Server console//////////////////////////////");
+
+  console.log(userId, receiverId);
+  console.log(imageUrl, propertyId);
+
+  const idArray = [userId, receiverId];
+
   // Basic validation
-  if (!userId || !receiverId || !imageUrl || !propertyId) {
+  if (!receiverId || !imageUrl || !propertyId) {
     return res.status(400).json({ message: "All fields are required!" });
   }
 
@@ -95,7 +102,7 @@ export const addChat = async (req, res) => {
   try {
     const newChat = await prisma.chat.create({
       data: {
-        userIDs: [userId, receiverId],
+        userIDs: idArray,
         imageUrl,
         propertyId,
       },
