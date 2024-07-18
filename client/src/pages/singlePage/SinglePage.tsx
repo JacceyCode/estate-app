@@ -169,6 +169,8 @@ const SinglePage = () => {
               receiver={post.user}
               receiverId={post.userId}
               senderId={currentUser!.id}
+              imageUrl={post.images[0]}
+              propertyId={post.id}
               handleCloseChat={closeChat}
             />
           )}

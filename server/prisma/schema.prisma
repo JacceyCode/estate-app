@@ -93,6 +93,8 @@ model Chat {
   seenBy      String[]  @db.ObjectId
   messages    Message[]
   lastMessage String?
+  imageUrl    String?
+  propertyId  String?
 }
 
 model Message {

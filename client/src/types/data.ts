@@ -84,6 +84,8 @@ export type ChatProp = {
   lastMessage: string;
   receiver: ReceiverProp;
   sender: ReceiverProp;
+  imageUrl: string;
+  propertyId: string;
 };
 
 type Message = {

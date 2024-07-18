@@ -6,10 +6,12 @@ import apiRequest from "../../data/apiRequest";
 import { format } from "timeago.js";
 import { useSocketContext } from "../../context/SocketContext";
 import { useNotificationStore } from "../../context/notificationStore";
+import { Link } from "react-router-dom";
 
 const Chat = ({ chats }: { chats: ChatProp[] }) => {
   const [chat, setChat] = useState<ChatMessage>();
   const [openChat, setOpenChat] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { currentUser } = useAuthContext();
   const { socket } = useSocketContext();
   const reversedChats = chats.slice().reverse();
@@ -40,6 +42,8 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
     const formData = new FormData(e.target as HTMLFormElement);
     const text = formData.get("text");
     if (!text) return;
@@ -71,6 +75,8 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,32 +121,53 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
 
           return (
             <section
-              className="message"
               key={chat.id}
               style={{
-                // backgroundColor: chat.seenBy.includes(currentUser!.id)
-                //   ? "white"
-                //   : "#fecd514e",
+                display: "flex",
+                justifyContent: "space-between",
                 backgroundColor: "white",
+                padding: "10px",
+                borderRadius: "10px",
+                alignItems: "center",
               }}
-              onClick={() =>
-                handleOpenChat(chat.id, chat.receiver, chat.sender)
-              }
             >
-              <img
-                src={
-                  currentProfile
-                    ? chat.sender.avatar || "/noavatar.jpg"
-                    : chat.receiver.avatar || "/noavatar.jpg"
+              <div
+                className="message"
+                onClick={() =>
+                  handleOpenChat(chat.id, chat.receiver, chat.sender)
                 }
-                alt={
-                  currentProfile ? chat.sender.username : chat.receiver.username
-                }
-              />
-              <span>
-                {currentProfile ? chat.sender.username : chat.receiver.username}
-              </span>
-              <p>{chat.lastMessage}</p>
+              >
+                <img
+                  src={
+                    currentProfile
+                      ? chat.sender.avatar || "/noavatar.jpg"
+                      : chat.receiver.avatar || "/noavatar.jpg"
+                  }
+                  alt={
+                    currentProfile
+                      ? chat.sender.username
+                      : chat.receiver.username
+                  }
+                />
+                <span>
+                  {currentProfile
+                    ? chat.sender.username
+                    : chat.receiver.username}
+                </span>
+                <p>{chat.lastMessage}</p>
+              </div>
+
+              <Link to={`/${chat.propertyId}` && "/list"}>
+                <img
+                  src={chat.imageUrl || "school.png"}
+                  alt="property image"
+                  style={{
+                    borderRadius: "10px",
+                    height: "50px",
+                    width: "50px",
+                  }}
+                />
+              </Link>
             </section>
           );
         })}
@@ -194,7 +221,14 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
 
           <form onSubmit={handleSubmit} className="bottom">
             <textarea name="text"></textarea>
-            <button>Send</button>
+            <button
+              disabled={isLoading}
+              style={{
+                cursor: isLoading ? "not-allowed" : "pointer",
+              }}
+            >
+              {isLoading ? "Sending..." : "Send"}
+            </button>
           </form>
         </section>
       )}

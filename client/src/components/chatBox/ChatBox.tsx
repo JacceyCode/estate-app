@@ -8,6 +8,8 @@ const ChatBox = ({
   receiver,
   receiverId,
   senderId,
+  imageUrl,
+  propertyId,
 }: {
   handleCloseChat: () => void;
   receiver: {
@@ -16,6 +18,8 @@ const ChatBox = ({
   };
   receiverId: string;
   senderId: string;
+  imageUrl: string;
+  propertyId: string;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [info, setInfo] = useState<string>();
@@ -31,7 +35,11 @@ const ChatBox = ({
     console.log(info);
     setIsLoading(true);
     try {
-      const res = await apiRequest.post("/chats", { receiverId });
+      const res = await apiRequest.post("/chats", {
+        receiverId,
+        imageUrl,
+        propertyId,
+      });
       const chatId = res.data.id;
 
       await apiRequest.post(`/messages/${chatId}/${senderId}`, {
@@ -65,8 +73,14 @@ const ChatBox = ({
 
       <section className="bottom">
         <textarea name="text" value={info} onChange={handleText}></textarea>
-        <button disabled={isLoading} onClick={handleSubmit}>
-          Send
+        <button
+          disabled={isLoading}
+          onClick={handleSubmit}
+          style={{
+            cursor: isLoading ? "not-allowed" : "pointer",
+          }}
+        >
+          {isLoading ? "Sending..." : "Send"}
         </button>
       </section>
     </section>

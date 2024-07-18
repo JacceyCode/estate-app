@@ -78,10 +78,13 @@ export const getChat = async (req, res) => {
 
 export const addChat = async (req, res) => {
   const userId = req.userId;
+  const { receiverId, imageUrl, propertyId } = req.body;
   try {
     const newChat = await prisma.chat.create({
       data: {
-        userIDs: [userId, req.body.receiverId],
+        userIDs: [userId, receiverId],
+        imageUrl,
+        propertyId,
       },
     });
 
