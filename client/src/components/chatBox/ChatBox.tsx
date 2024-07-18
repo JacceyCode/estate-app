@@ -7,6 +7,7 @@ const ChatBox = ({
   handleCloseChat,
   receiver,
   receiverId,
+  senderId,
 }: {
   handleCloseChat: () => void;
   receiver: {
@@ -14,7 +15,9 @@ const ChatBox = ({
     avatar: string;
   };
   receiverId: string;
+  senderId: string;
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [info, setInfo] = useState<string>();
   const navigate = useNavigate();
 
@@ -25,11 +28,13 @@ const ChatBox = ({
   };
 
   const handleSubmit = async () => {
+    console.log(info);
+    setIsLoading(true);
     try {
       const res = await apiRequest.post("/chats", { receiverId });
       const chatId = res.data.id;
 
-      await apiRequest.post("/messages/" + chatId, {
+      await apiRequest.post(`/messages/${chatId}/${senderId}`, {
         text: info,
       });
 
@@ -38,6 +43,8 @@ const ChatBox = ({
       handleCloseChat();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,7 +65,9 @@ const ChatBox = ({
 
       <section className="bottom">
         <textarea name="text" value={info} onChange={handleText}></textarea>
-        <button onClick={handleSubmit}>Send</button>
+        <button disabled={isLoading} onClick={handleSubmit}>
+          Send
+        </button>
       </section>
     </section>
   );

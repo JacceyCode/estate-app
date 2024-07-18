@@ -168,6 +168,7 @@ const SinglePage = () => {
             <ChatBox
               receiver={post.user}
               receiverId={post.userId}
+              senderId={currentUser!.id}
               handleCloseChat={closeChat}
             />
           )}

@@ -45,7 +45,6 @@ const Chat = ({ chats }: { chats: ChatProp[] }) => {
     if (!text) return;
 
     try {
-      // const res = await apiRequest.post("/messages/" + chat?.id, { text });
       const res = await apiRequest.post(
         `/messages/${chat?.id}/${currentUser?.id}`,
         { text }
